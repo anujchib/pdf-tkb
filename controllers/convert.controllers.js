@@ -36,18 +36,16 @@ export const convert = async (req, res) => {
   console.log("Will save converted file to:", baseOutputFile);
 
   // Define the conversion commands for different types
-  // In your convert.controllers.js file
-const conversions = {
-  'txt2word': `pandoc "${inputFile}" -o "${baseOutputFile}.docx"`,
-  'word2txt': `pandoc "${inputFile}" -o "${baseOutputFile}.txt"`,
-  'word2pdf': `pandoc "${inputFile}" -o "${baseOutputFile}.pdf"`,
-  'pdf2word': `pandoc "${inputFile}" -o "${baseOutputFile}.docx"`,
-  // Change these to use convert instead of magick
-  'pdf2jpg': `convert "${inputFile}" -quality 100 "${baseOutputFile}-%d.jpg"`,
-  'jpg2pdf': `convert "${inputFile}" -quality 100 "${baseOutputFile}.pdf"`,
-  'heic2pdf': `convert "${inputFile}" -quality 100 "${baseOutputFile}.pdf"`,
-  'heic2jpg': `convert "${inputFile}" -quality 100 "${baseOutputFile}.jpg"`,
-};
+  const conversions = {
+    'txt2word': `pandoc "${inputFile}" -o "${baseOutputFile}.docx"`,
+    'word2txt': `pandoc "${inputFile}" -o "${baseOutputFile}.txt"`,
+    'word2pdf': `pandoc "${inputFile}" -o "${baseOutputFile}.pdf"`,
+    'pdf2word': `pandoc "${inputFile}" -o "${baseOutputFile}.docx"`,
+    'pdf2jpg': `convert "${inputFile}" -quality 100 "${baseOutputFile}-%d.jpg"`,
+    'jpg2pdf': `convert "${inputFile}" -quality 100 "${baseOutputFile}.pdf"`,
+    'heic2pdf': `convert "${inputFile}" -quality 100 "${baseOutputFile}.pdf"`,
+    'heic2jpg': `convert "${inputFile}" -quality 100 "${baseOutputFile}.jpg"`,
+  };
 
   // If the conversion type is invalid, return an error
   if (!conversions[conversion]) {
