@@ -1,6 +1,11 @@
 [build]
 builder = "nixpacks"
-buildCommand = "apt-get update && apt-get install -y imagemagick pandoc && npm install"
+buildCommand = """
+apt-get update
+apt-get install -y imagemagick pandoc
+npm install
+mkdir -p convertedFile uploadFile
+"""
 
 [deploy]
 startCommand = "node index.js"
