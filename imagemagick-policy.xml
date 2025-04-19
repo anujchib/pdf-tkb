@@ -1,5 +1,0 @@
-<policymap>
-  <policy domain="coder" rights="read|write" pattern="PDF" />
-  <policy domain="coder" rights="read|write" pattern="HEIC" />
-  <policy domain="delegate" rights="execute" pattern="gs" />
-</policymap>

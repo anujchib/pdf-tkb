@@ -1,36 +1,40 @@
-# Use Node.js 18 as the base image
-FROM node:18
+FROM node:23-slim
 
-# Set working directory
+# Install dependencies and configure in a single layer to reduce image size
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    pandoc \
+    imagemagick \
+    ghostscript \
+    && sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a non-root user to enhance security
+RUN groupadd -r appuser && useradd -r -g appuser -m appuser
+
+# Create app directory and set permissions
 WORKDIR /app
 
-# Install build tools and dependencies (ImageMagick, Ghostscript, Pandoc)
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    imagemagick \
-    libheif-dev \
-    pandoc \
-    ghostscript
+# Copy package files and install dependencies
+COPY --chown=appuser:appuser package*.json ./
+RUN npm ci --only=production && npm cache clean --force
 
-# Copy package.json and package-lock.json (if exists)
-COPY package*.json ./
+# Create required directories and set permissions
+RUN mkdir -p convertedFile uploadFile \
+    && chown -R appuser:appuser /app
 
-# Install Node.js dependencies
-RUN npm install --production --verbose --network-timeout 100000 \
-    && npm cache clean --force
+# Copy the application code (after installing dependencies to leverage caching)
+COPY --chown=appuser:appuser . .
 
-# Copy ImageMagick policy file
-COPY imagemagick-policy.xml /etc/ImageMagick-6/policy.xml
+# Add healthcheck to verify the service is running properly
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3001/api/health', (res) => res.statusCode === 200 ? process.exit(0) : process.exit(1))" || exit 1
 
-# Create directories and set permissions
-RUN mkdir -p /app/uploadFile /app/convertedFile \
-    && chmod -R 777 /app/uploadFile /app/convertedFile
+# Switch to non-root user
+USER appuser
 
-# Copy the rest of the application code
-COPY . .
-
-# Expose port 8080
-EXPOSE 8080
+# Expose the port the app runs on
+EXPOSE 3001
 
 # Start the application
 CMD ["npm", "start"]

@@ -8,7 +8,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-     "check-deps": "convert --version && pandoc --version"
+     "check-deps": "convert --version && pandoc --version",
+       "build": "echo 'Build step complete'"
   },
   "keywords": [
     "pdf",
