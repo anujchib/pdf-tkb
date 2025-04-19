@@ -1,0 +1,8 @@
+[phases.setup]
+aptPkgs = ['imagemagick', 'pandoc']
+
+[phases.build]
+cmds = ['npm install', 'mkdir -p convertedFile uploadFile']
+
+[start]
+cmd = "node index.js"
