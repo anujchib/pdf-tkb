@@ -6,6 +6,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     imagemagick \
     ghostscript \
     && sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml \
+    # Create a symlink for magick if it doesn't exist
+    && (which magick || ln -s /usr/bin/convert /usr/local/bin/magick) \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -17,7 +19,7 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY --chown=appuser:appuser package*.json ./
-RUN npm ci --only=production && npm cache clean --force
+RUN npm install --production && npm cache clean --force
 
 # Create required directories and set permissions
 RUN mkdir -p convertedFile uploadFile \
