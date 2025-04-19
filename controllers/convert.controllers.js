@@ -41,10 +41,10 @@ export const convert = async (req, res) => {
     'word2txt': `pandoc "${inputFile}" -o "${baseOutputFile}.txt"`,
     'word2pdf': `pandoc "${inputFile}" -o "${baseOutputFile}.pdf"`,
     'pdf2word': `pandoc "${inputFile}" -o "${baseOutputFile}.docx"`,
-    'pdf2jpg': `convert "${inputFile}" -quality 100 "${baseOutputFile}-%d.jpg"`,
-    'jpg2pdf': `convert "${inputFile}" -quality 100 "${baseOutputFile}.pdf"`,
-    'heic2pdf': `convert "${inputFile}" -quality 100 "${baseOutputFile}.pdf"`,
-    'heic2jpg': `convert "${inputFile}" -quality 100 "${baseOutputFile}.jpg"`,
+    'pdf2jpg': `magick "${inputFile}" -quality 100 "${baseOutputFile}-%d.jpg"`,
+    'jpg2pdf': `magick "${inputFile}" -quality 100 "${baseOutputFile}.pdf"`,
+    'heic2pdf': `magick "${inputFile}" -quality 100 "${baseOutputFile}.pdf"`,
+    'heic2jpg': `magick "${inputFile}" -quality 100 "${baseOutputFile}.jpg"`,
   };
 
   // If the conversion type is invalid, return an error
