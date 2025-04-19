@@ -1,0 +1,9 @@
+[build]
+builder = "nixpacks"
+buildCommand = "apt-get update && apt-get install -y imagemagick pandoc && npm install"
+
+[deploy]
+startCommand = "node index.js"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 100
+restartPolicyType = "on_failure"
